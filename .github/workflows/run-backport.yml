@@ -3,10 +3,6 @@ name: Run Backport (manual/ref)
 on:
   workflow_dispatch:
     inputs:
-      action_ref_suffix:
-        description: 'Only enter the ref (the part after the @), e.g. "main" or "feature/test"'
-        required: true
-        default: "main"
       detection_method:
         description: "Detection method used by the action (label, comment, custom)"
         required: true
@@ -18,7 +14,7 @@ on:
       input_pattern:
         description: "Regex pattern to validate target branches"
         required: false
-        default: '^v\\d+.\\d+.\\d+$'
+        default: '^v\\d+\\.\\d+\\.\\d+$'
       input_prefix:
         description: "Prefix for input values when using labels/custom"
         required: false
@@ -35,15 +31,14 @@ on:
 jobs:
   run-backport:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout
+      - name: Checkout the chosen ref
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
       - name: Run Backport Action
-        uses: Nick-v-L/backport@${{ inputs.action_ref_suffix }}
+        uses: Nick-v-L/backport@main
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           detection-method: ${{ inputs.detection_method }}
