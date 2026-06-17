@@ -22,4 +22,3 @@ jobs:
           input-pattern: '^v\\d+\\.\\d+\\.x$'
           input-prefix: "backport-to-"
           target-branch-prefix: "backport/"
-          dry-run: "false"

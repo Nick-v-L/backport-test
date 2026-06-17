@@ -14,7 +14,7 @@ creates test PRs in this repo that exercise the Nick-v-L/backport app (comment-b
 2. Decide how to trigger the test run from the Nick-v-L/backport repository:
    - Preferred: add a small workflow in `Nick-v-L/backport` that sends a `repository_dispatch` event to this repo on `push` to `main`.
    - Alternative: trigger manually using the `gh` CLI or `curl` (examples below).
-3. (Optional) If you want the test run to create a status check on the triggering commit in `Nick-v-L/backport`, add a PAT with `repo` and `checks:write` permissions as a secret in this repo (suggested name: `BACKPORT_TEST_PAT`). The default behavior only needs the test repo's workflow permissions to create PRs inside this repo.
+3. Secrets: to allow the test runner to create and merge PRs in a way that triggers other workflows, add a Personal Access Token (PAT) with `repo` and `workflow` permissions as a secret in this repo. Name it `BACKPORT_TEST_PAT`. The receiver workflow uses this secret so merges will trigger normal `pull_request` workflow runs.
 
 ### Trigger examples (add to `Nick-v-L/backport`)
 

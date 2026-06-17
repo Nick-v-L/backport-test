@@ -19,6 +19,7 @@ jobs:
       - name: Run backport tests
         uses: actions/github-script@v6
         with:
+          github-token: ${{ secrets.BACKPORT_TEST_PAT }}
           script: |
             const owner = context.repo.owner;
             const repo = context.repo.repo;
@@ -66,7 +67,7 @@ jobs:
               await github.rest.pulls.merge({owner, repo, pull_number: pr_number, merge_method: 'merge'});
             }
 
-            async function pollForBackport(originalPrNumber, timeoutSec=600, intervalSec=10) {
+            async function pollForBackport(originalPrNumber, timeoutSec=60, intervalSec=5) {
               const deadline = Date.now() + timeoutSec*1000;
               while (Date.now() < deadline) {
                 const pulls = await github.rest.pulls.list({owner, repo, state: 'open', per_page: 100});
@@ -97,7 +98,7 @@ jobs:
               await mergePR(pr.number);
               core.info(`Merged PR #${pr.number}`);
               // poll for backport PR
-              const backportPr = await pollForBackport(pr.number, 600, 10);
+              const backportPr = await pollForBackport(pr.number);
               if (!backportPr) {
                 core.setFailed(`No backport PR detected for original PR #${pr.number}`);
                 return false;
