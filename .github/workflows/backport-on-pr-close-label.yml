@@ -1,0 +1,24 @@
+name: Backport on PR Close (Label)
+
+on:
+  pull_request:
+    types: [closed]
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+
+jobs:
+  backport:
+    if: github.event.pull_request.merged == true && contains(github.event.pull_request.title, 'LABEL:')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run Backport Action
+        uses: Nick-v-L/backport@main
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          detection-method: label
+          input-prefix: "backport-to-"
+          target-branch-prefix: "backport/"
+          dry-run: "false"
