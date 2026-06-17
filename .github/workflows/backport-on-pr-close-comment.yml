@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Run Backport Action
-        uses: Nick-v-L/backport@a34b59f66fd70fcce0084c4c482c4f2da04d9ea8
+        uses: Nick-v-L/backport@main
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           detection-method: comment
