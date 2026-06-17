@@ -20,5 +20,4 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           detection-method: label
           input-prefix: "backport-to-"
-          target-branch-prefix: "backport/"
-          dry-run: "false"
+          target-branch-prefix: "backport-labels/"

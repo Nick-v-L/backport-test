@@ -19,6 +19,4 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           detection-method: comment
-          input-pattern: '^v\\d+\\.\\d+\\.x$'
           input-prefix: "backport-to-"
-          target-branch-prefix: "backport/"
