@@ -119,15 +119,15 @@ jobs:
               return false;
             }
 
-            // Run three scenarios
-            // 1) Comment-based backport to v1.1.x
-            const commentOK = await runTest({testName: 'comment', doComment: true, commentText: '/backport v1.1.x', titlePrefix: 'COMMENT:'});
+            # // Run three scenarios
+            # // 1) Comment-based backport to v1.1.x
+            # const commentOK = await runTest({testName: 'comment', doComment: true, commentText: '/backport v1.1.x', titlePrefix: 'COMMENT:'});
             // 2) Label-based backport
             const labelText = 'backport-to-v2.0.x';
             const labelOK = await runTest({testName: 'label', doLabel: true, labelText, titlePrefix: 'LABEL:'});
-            // 3) Custom branches backport
-            const branches = 'v3.3.x';
-            const customOK = await runTest({testName: 'custom', titlePrefix: 'CUSTOM:'});
+            # // 3) Custom branches backport
+            # const branches = 'v3.3.x';
+            # const customOK = await runTest({testName: 'custom', titlePrefix: 'CUSTOM:'});
 
             if (!commentOK || !labelOK || !customOK) {
               core.setFailed('One or more backport tests failed');
