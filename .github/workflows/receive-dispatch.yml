@@ -87,7 +87,7 @@ jobs:
               const branch = `test/${testName}-${randomSuffix}`;
               await createBranchFromMain(branch);
               const appendText = `Auto test ${testName} - ${timestamp}`;
-              await updateFileOnBranch(branch, 'SAMPLE-CHANGE-${testName}.txt', appendText);
+              await updateFileOnBranch(branch, `SAMPLE-CHANGE-${testName}.txt`, appendText);
               const title = `${testName} backport test ${timestamp}`;
               const body = `Automated test PR for backport (${testName})`;
               const pr = await createPR(branch, title, body);
@@ -121,15 +121,16 @@ jobs:
 
             // Run three scenarios
             // 1) Comment-based backport to v1.1.x
-            // const commentOK = await runTest({testName: 'COMMENT', doComment: true, commentText: '/backport v1.1.x'});
+            // const commentOK = await runTest({testName: 'Comment', doComment: true, commentText: '/backport v1.1.x'});
             // 2) Label-based backport
             const labelText = 'backport-to-v1.1.x';
-            const labelOK = await runTest({testName: 'LABEL', doLabel: true, labelText});
+            const labelOK = await runTest({testName: 'Label', doLabel: true, labelText});
             // 3) Custom branches backport
             // const branches = 'v3.3.x';
-            // const customOK = await runTest({testName: 'CUSTOM', titlePrefix});
+            // const customOK = await runTest({testName: 'Custom', titlePrefix});
 
-            if (!commentOK || !labelOK || !customOK) {
+            //if (!commentOK || !labelOK || !customOK) {
+            if (!labelOK) {
               core.setFailed('One or more backport tests failed');
             } else {
               core.info('All backport tests passed');

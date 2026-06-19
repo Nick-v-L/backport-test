@@ -11,7 +11,7 @@ permissions:
 
 jobs:
   backport:
-    if: github.event.pull_request.merged == true && contains(github.event.pull_request.title, 'CUSTOM:')
+    if: github.event.pull_request.merged == true && contains(github.event.pull_request.title, 'Custom')
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
