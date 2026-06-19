@@ -83,12 +83,12 @@ jobs:
             }
 
             // Generic test runner
-            async function runTest({testName, doComment, commentText, doLabel, labelText, customBranches, titlePrefix}) {
+            async function runTest({testName, doComment, commentText, doLabel, labelText, customBranches}) {
               const branch = `test/${testName}-${randomSuffix}`;
               await createBranchFromMain(branch);
               const appendText = `Auto test ${testName} - ${timestamp}`;
-              await updateFileOnBranch(branch, 'SAMPLE-CHANGE-COMMENT.txt', appendText);
-              const title = `${titlePrefix} test(${testName}): ${timestamp}`;
+              await updateFileOnBranch(branch, 'SAMPLE-CHANGE-${testName}.txt', appendText);
+              const title = `${testName} backport test ${timestamp}`;
               const body = `Automated test PR for backport (${testName})`;
               const pr = await createPR(branch, title, body);
               core.info(`Created PR #${pr.number}`);
@@ -121,13 +121,13 @@ jobs:
 
             // Run three scenarios
             // 1) Comment-based backport to v1.1.x
-            // const commentOK = await runTest({testName: 'comment', doComment: true, commentText: '/backport v1.1.x', titlePrefix: 'COMMENT:'});
+            // const commentOK = await runTest({testName: 'COMMENT', doComment: true, commentText: '/backport v1.1.x'});
             // 2) Label-based backport
             const labelText = 'backport-to-v1.1.x';
-            const labelOK = await runTest({testName: 'label', doLabel: true, labelText, titlePrefix: 'LABEL:'});
+            const labelOK = await runTest({testName: 'LABEL', doLabel: true, labelText});
             // 3) Custom branches backport
             // const branches = 'v3.3.x';
-            // const customOK = await runTest({testName: 'custom', titlePrefix: 'CUSTOM:'});
+            // const customOK = await runTest({testName: 'CUSTOM', titlePrefix});
 
             if (!commentOK || !labelOK || !customOK) {
               core.setFailed('One or more backport tests failed');
