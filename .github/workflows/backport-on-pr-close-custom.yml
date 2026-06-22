@@ -22,3 +22,4 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           detection-method: custom
           custom-input: v3.3.x
+          target-branch-prefix: "backport-custom/"

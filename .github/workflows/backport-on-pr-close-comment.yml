@@ -22,3 +22,4 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           detection-method: comment
           input-prefix: "backport-to-"
+          target-branch-prefix: "backport-comment/"
