@@ -87,7 +87,7 @@ jobs:
             }
 
             // Generic test runner
-            async function runTest({testName, doComment, commentText, doLabel, labelText, customBranches, resultBranch}) {
+            async function runTest({testName, doComment, commentText, doLabel, labelText, resultBranch}) {
               const branch = `test/${testName}-${randomSuffix}`;
               await createBranchFromMain(branch);
               const appendText = `Auto test ${testName} - ${timestamp}`;
@@ -116,7 +116,7 @@ jobs:
                   await mergePR(backportPr.number);
                   core.info(`Merged backport PR #${backportPr.number}`);
                   deleteBranch(branch).catch(()=>console.warn(`Failed to delete branch ${branch}`));
-                  deleteBranch(`backport/${resultBranch}/pr-${backportPr.number}`).catch(()=>console.warn(`Failed to delete branch backport/${resultBranch}/pr-${backportPr.number}`));
+                  deleteBranch(`backport/${resultBranch}/pr-${pr.number}`).catch(()=>console.warn(`Failed to delete branch backport/${resultBranch}/pr-${backportPr.number}`));
                   deleteBranch(resultBranch).catch(()=>console.warn(`Failed to delete branch ${resultBranch}`));
                   return true;
                 }
@@ -124,23 +124,17 @@ jobs:
               }
               core.setFailed(`Backport PR #${backportPr.number} was not mergeable in time`);
               deleteBranch(branch).catch(()=>console.warn(`Failed to delete branch ${branch}`));
-              deleteBranch(`backport/${resultBranch}/pr-${backportPr.number}`).catch(()=>console.warn(`Failed to delete branch backport/${resultBranch}/pr-${backportPr.number}`));
+              deleteBranch(`backport/${resultBranch}/pr-${pr.number}`).catch(()=>console.warn(`Failed to delete branch backport/${resultBranch}/pr-${backportPr.number}`));
               deleteBranch(resultBranch).catch(()=>console.warn(`Failed to delete branch ${resultBranch}`));
               return false;
             }
 
             // Run three scenarios
-            // 1) Comment-based backport to v1.1.x
-            // const commentOK = await runTest({testName: 'Comment', doComment: true, commentText: '/backport v1.1.x'});
-            // 2) Label-based backport
-            const labelText = 'backport-to-v1.1.x';
-            const labelOK = await runTest({testName: 'Label', doLabel: true, labelText, resultBranch: 'v1.1.x'});
-            // 3) Custom branches backport
-            // const branches = 'v3.3.x';
-            // const customOK = await runTest({testName: 'Custom', titlePrefix});
+            const commentOK = await runTest({testName: 'Comment', doComment: true, commentText: '/backport software-v1.1.x', resultBranch: 'software-v1.1.x'});
+            const labelOK = await runTest({testName: 'Label', doLabel: true, labelText: 'backport-to-v2.4.x', resultBranch: 'v2.4.x'});
+            const customOK = await runTest({testName: 'Custom', titlePrefix, resultBranch: 'v3.3.x'});
 
-            //if (!commentOK || !labelOK || !customOK) {
-            if (!labelOK) {
+            if (!commentOK || !labelOK || !customOK) {
               core.setFailed('One or more backport tests failed');
             } else {
               core.info('All backport tests passed');
