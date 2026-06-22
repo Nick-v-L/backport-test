@@ -31,6 +31,10 @@ jobs:
               await github.rest.git.createRef({owner, repo, ref: `refs/heads/${branch}`, sha: mainRef.data.object.sha});
             }
 
+            async function deleteBranch(branch) {
+              await github.rest.git.deleteRef({owner, repo, ref: `refs/heads/${branch}`}).catch(()=>null);
+            }
+
             async function updateFileOnBranch(branch, path, appendText) {
               const file = await github.rest.repos.getContent({owner, repo, path, ref: `heads/${branch}`}).catch(()=>null);
               let content = '';
@@ -111,11 +115,13 @@ jobs:
                 if (bp.data.mergeable && bp.data.mergeable_state === 'clean') {
                   await mergePR(backportPr.number);
                   core.info(`Merged backport PR #${backportPr.number}`);
+                  deleteBranch(branch).catch(()=>console.warn(`Failed to delete branch ${branch}`));
                   return true;
                 }
                 await new Promise(r => setTimeout(r, 5000));
               }
               core.setFailed(`Backport PR #${backportPr.number} was not mergeable in time`);
+              deleteBranch(branch).catch(()=>console.warn(`Failed to delete branch ${branch}`));
               return false;
             }
 
