@@ -87,7 +87,7 @@ jobs:
             }
 
             // Generic test runner
-            async function runTest({testName, doComment, commentText, doLabel, labelText, customBranches}) {
+            async function runTest({testName, doComment, commentText, doLabel, labelText, customBranches, resultBranch}) {
               const branch = `test/${testName}-${randomSuffix}`;
               await createBranchFromMain(branch);
               const appendText = `Auto test ${testName} - ${timestamp}`;
@@ -116,12 +116,16 @@ jobs:
                   await mergePR(backportPr.number);
                   core.info(`Merged backport PR #${backportPr.number}`);
                   deleteBranch(branch).catch(()=>console.warn(`Failed to delete branch ${branch}`));
+                  deleteBranch(`backport/${resultBranch}/pr-${backportPr.number}`).catch(()=>console.warn(`Failed to delete branch backport/${resultBranch}/pr-${backportPr.number}`));
+                  deleteBranch(resultBranch).catch(()=>console.warn(`Failed to delete branch ${resultBranch}`));
                   return true;
                 }
                 await new Promise(r => setTimeout(r, 5000));
               }
               core.setFailed(`Backport PR #${backportPr.number} was not mergeable in time`);
               deleteBranch(branch).catch(()=>console.warn(`Failed to delete branch ${branch}`));
+              deleteBranch(`backport/${resultBranch}/pr-${backportPr.number}`).catch(()=>console.warn(`Failed to delete branch backport/${resultBranch}/pr-${backportPr.number}`));
+              deleteBranch(resultBranch).catch(()=>console.warn(`Failed to delete branch ${resultBranch}`));
               return false;
             }
 
@@ -130,7 +134,7 @@ jobs:
             // const commentOK = await runTest({testName: 'Comment', doComment: true, commentText: '/backport v1.1.x'});
             // 2) Label-based backport
             const labelText = 'backport-to-v1.1.x';
-            const labelOK = await runTest({testName: 'Label', doLabel: true, labelText});
+            const labelOK = await runTest({testName: 'Label', doLabel: true, labelText, resultBranch: 'v1.1.x'});
             // 3) Custom branches backport
             // const branches = 'v3.3.x';
             // const customOK = await runTest({testName: 'Custom', titlePrefix});
