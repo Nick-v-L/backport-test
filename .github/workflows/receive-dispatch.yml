@@ -132,7 +132,7 @@ jobs:
             // Run three scenarios
             const commentOK = await runTest({testName: 'Comment', doComment: true, commentText: '/backport software-v1.1.x', resultBranch: 'software-v1.1.x'});
             const labelOK = await runTest({testName: 'Label', doLabel: true, labelText: 'backport-to-v2.4.x', resultBranch: 'v2.4.x'});
-            const customOK = await runTest({testName: 'Custom', titlePrefix, resultBranch: 'v3.3.x'});
+            const customOK = await runTest({testName: 'Custom', resultBranch: 'v3.3.x'});
 
             if (!commentOK || !labelOK || !customOK) {
               core.setFailed('One or more backport tests failed');
