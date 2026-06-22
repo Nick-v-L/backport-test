@@ -32,7 +32,7 @@ jobs:
             }
 
             async function deleteBranch(branch) {
-              await github.rest.git.deleteRef({owner, repo, ref: `refs/heads/${branch}`}).catch(()=>null);
+              await github.rest.git.deleteRef({owner, repo, ref: `heads/${branch}`}).catch(()=>null);
             }
 
             async function updateFileOnBranch(branch, path, appendText) {
