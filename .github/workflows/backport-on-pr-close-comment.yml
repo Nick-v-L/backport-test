@@ -11,15 +11,16 @@ permissions:
 
 jobs:
   backport:
-    if: github.event.pull_request.merged == true && contains(github.event.pull_request.title, 'Comment')
+    if: github.event.pull_request.merged == true && startsWith(github.event.pull_request.title, 'Comment')
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
+
       - name: Run Backport Action
         uses: Nick-v-L/backport@main
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           detection-method: comment
           input-prefix: "backport-to-"
-          target-branch-prefix: "backport-comment/"
